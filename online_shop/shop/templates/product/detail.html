@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% load thumbnail %}
 {% block title %}
 {{ product.name }}
@@ -15,6 +16,11 @@
         </a>
     </h2>
     <p class="price">£{{product.price}}</p>
+    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+        {{ cart_product_form|crispy }}
+        {% csrf_token %}
+        <input type="submit" value="Add to cart" class="btn btn-small btn-info">
+    </form>
     <p>{{product.description|linebreaks}}</p>
 </div>
 {% endblock %}
