@@ -49,8 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party
     'crispy_forms',
+    'easy_thumbnails',
     # local
     'shop.apps.ShopConfig',
+    'cart.apps.CartConfig',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +134,14 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+print(STATICFILES_DIRS)
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# This is the key that you are going to use to store the cart in the user session.
+# Since django sessions are managed per visitor, you can use the same cart session
+# key for all sessions.
+CART_SESSION_ID = 'cart'
+
