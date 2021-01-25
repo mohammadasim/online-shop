@@ -1,9 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from easy_thumbnails.fields import ThumbnailerImageField
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Category(models.Model):
+class Category(ExportModelOperationsMixin('category'), models.Model):
     """
     Catalogue for the shop
     """
@@ -25,7 +26,7 @@ class Category(models.Model):
                        args=[self.slug])
 
 
-class Product(models.Model):
+class Product(ExportModelOperationsMixin('product'), models.Model):
     """
     Product in the shop
     """

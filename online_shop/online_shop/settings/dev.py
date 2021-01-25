@@ -6,7 +6,7 @@ ALLOWED_HOSTS = []
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django_prometheus.db.backends.postgresql',
         'NAME': get_env_variable('PGSQL_DB_NAME'),
         'USER': get_env_variable('PGSQL_DB_USER'),
         'PASSWORD': get_env_variable('PGSQL_DB_PASW'),
