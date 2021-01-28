@@ -14,3 +14,4 @@ DATABASES = {
         'PORT': get_env_variable('PGSQL_DB_PORT'),
     }
 }
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -34,13 +34,13 @@ Your shopping cart
                         {{ item.update_quantity_form.quantity }}
                         {{ item.update_quantity_form.override }}
                         {% csrf_token %}
-                        <input type="submit" value="Update">
+                        <input type="submit" value="Update" class="btn btn-warning btn-sm">
                     </form>
                 </td>
                 <td>
                     <form action="{% url 'cart:cart_remove' product.id %}" method="post">
                         {% csrf_token %}
-                        <input type="submit" value="Remove">
+                        <input type="submit" value="Remove" class="btn btn-danger btn-sm">
                     </form>
                 </td>
                 <td class="num">£{{ item.price }}</td>
@@ -56,6 +56,8 @@ Your shopping cart
     </tbody>
 </table>
 <p class="text-right">
-    <a href="{% url 'shop:product_list' %}" class="btn btn-default btn-small">Continue Shopping</a>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-info">Continue Shopping</a>
+    <a href="{% url 'orders:order_create' %}" class="btn btn-success">Checkout</a>
 </p>
+
 {% endblock content %}
