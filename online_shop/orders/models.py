@@ -20,7 +20,8 @@ class Order(ExportModelOperationsMixin('order'), models.Model):
     braintree_id = models.CharField(max_length=150, blank=True)
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('created',)
+        verbose_name = 'order'
 
     def __str__(self):
         return f'Order {self.id}'

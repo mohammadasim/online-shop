@@ -1,3 +1,6 @@
+import csv
+from datetime import datetime
+from django.http import HttpResponse
 from django.contrib import admin
 
 from .models import Order, OrderItem
@@ -25,3 +28,56 @@ class OrderAdmin(admin.ModelAdmin):
                     'created', 'updated']
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
+    # we add the custom action defined about to model admin class
+    actions = ['export_to_csv']
+
+    def export_to_csv(self, request, queryset):
+        """
+        Exports the orders provided in queryset to a
+        csv file.
+        :param request:
+        :param queryset:
+        :return:
+        """
+        # Get access to the model meta class.
+        # This usually defined at the end of the model class
+        opt = self.model._meta
+        # create content_disposition, that is to be passed to the response.
+        # here we tell that the response contains a file attachment and the
+        # name of the file.
+        content_disposition = f'attachment; filename={opt.verbose_name}.csv'
+        # create an instance of HttpResponse, specifying the text/csv content
+        # to tell the browser that the response has to be treated as a CSV file.
+        # We also add Content-Disposition header to indicated that the http response
+        # contains an attached file.
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = content_disposition
+
+        # We create a csv writer object that will write to the
+        # response object.
+        writer = csv.writer(response)
+        # We get models fields dynamically, using the get_options method
+        # of the model _meta options. We exclude m2m and m21 relationships.
+        fields = [field for field in opt.get_fields()
+                  if not field.many_to_many and not field.one_to_many]
+        # write a first row with header information
+        writer.writerow([field.verbose_name for field in fields])
+        # write data rows
+        # The queryset contains the list of instances, whose fields info we have
+        # to export to csv file. so we iterate over each object in the queryset
+        # we then change datetime fields of the object into strings
+        # we then write the data to the writer.
+        for obj in queryset:
+            data_row = []
+            for field in fields:
+                value = getattr(obj, field.name)
+                if isinstance(value, datetime):
+                    value = value.strftime('%d/%m/%Y')
+                data_row.append(value)
+            writer.writerow(data_row)
+        return response
+
+    # We customise the display name of the action in the actions dropbox
+    # element of the admin site by setting a short_description attribute of
+    # the function.
+    export_to_csv.short_description = 'Export to CSV'
