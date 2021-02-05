@@ -2,6 +2,8 @@ import csv
 from datetime import datetime
 from django.http import HttpResponse
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from .models import Order, OrderItem
 
@@ -21,11 +23,38 @@ class OrderItemInline(admin.TabularInline):
     raw_id_fields = ['product']
 
 
+def order_detail(obj):
+    """
+    Function that shows custom view for order detail.
+    :param obj:
+    :return:
+    """
+    url = reverse('orders:admin_order_detail', args=[obj.id])
+    # Notice we using only single {} in url
+    return mark_safe(f'<a href="{url}">View</a>')
+
+
+def order_pdf(obj):
+    """
+    function that links the view admin_order_pdf
+    to the admin site for order. The function returns
+    a url to the view. This function is added to the
+    list_display of the orderAdmin
+    :param obj:
+    :return:
+    """
+    url = reverse('orders:admin_order_pdf', args=[obj.id])
+    return mark_safe(f'<a href="{url}">PDF</a>')
+
+
+order_pdf.short_description = 'Invoice'
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'first_name', 'last_name', 'email',
                     'address', 'postal_code', 'city', 'paid',
-                    'created', 'updated']
+                    'created', 'updated', order_detail, order_pdf]
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
     # we add the custom action defined about to model admin class
