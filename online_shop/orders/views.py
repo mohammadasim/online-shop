@@ -10,6 +10,7 @@ from .models import OrderItem, Order
 from .forms import OrderCreateForm
 from cart.cart import Cart
 from .tasks import order_created
+from shop.recommender import Recommender
 
 
 def order_create(request):
@@ -19,15 +20,23 @@ def order_create(request):
     :return:
     """
     cart = Cart(request)
+    form = OrderCreateForm()
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
-            order = form.save()
+            order = form.save(commit=False)
+            if cart.coupon:
+                order.coupon = cart.coupon
+                order.discount = cart.coupon.discount
+            order.save()
             for item in cart:
                 OrderItem.objects.create(order=order,
                                          product=item['product'],
                                          price=item['price'],
                                          quantity=item['quantity'])
+            r = Recommender()
+            cart_products = [item['product'] for item in cart]
+            r.products_bought(cart_products)
             # clear the cart
             cart.clear()
             order_created.delay(order.id)
@@ -35,11 +44,9 @@ def order_create(request):
             request.session['order_id'] = order.id
             # redirect for payment
             return redirect(reverse('payment:process'))
-    else:
-        form = OrderCreateForm()
-        return render(request,
-                      'order/create.html',
-                      {'cart': cart, 'form': form})
+    return render(request,
+                  'order/create.html',
+                  {'cart': cart, 'form': form})
 
 
 @staff_member_required

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% load thumbnail %}
@@ -19,8 +20,21 @@
     <form action="{% url 'cart:cart_add' product.id %}" method="post">
         {{ cart_product_form|crispy }}
         {% csrf_token %}
-        <input type="submit" value="Add to cart" class="btn btn-small btn-info">
+        <input type="submit" value="{% trans 'Add to cart' %}" class="btn btn-small btn-info">
     </form>
     <p>{{product.description|linebreaks}}</p>
 </div>
+{% if recommended_products %}
+<div class="recommendations">
+    <h3>{% trans 'People who bought this also bought' %}</h3>
+    {% for p in recommended_products %}
+    <div class="item">
+        <a href="{{ p.get_absolute_url }}">
+            <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/no_image.jpg' %}{% endif %}">
+        </a>
+        <p><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}

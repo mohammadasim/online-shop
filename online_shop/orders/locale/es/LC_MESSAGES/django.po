@@ -1,0 +1,87 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-07 17:11+0000\n"
+"PO-Revision-Date: 2021-02-07 17:16+0000\n"
+"Last-Translator: b'  <asim.kdr@hotmail.com>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.9.5\n"
+
+#: orders/models.py:15
+msgid "first name"
+msgstr "nombre"
+
+#: orders/models.py:17
+msgid "last name"
+msgstr "apellidos"
+
+#: orders/models.py:19
+msgid "e-mail"
+msgstr "e-mail"
+
+#: orders/models.py:20
+msgid "address"
+msgstr "dirección"
+
+#: orders/models.py:21
+msgid "postal code"
+msgstr "código postal"
+
+#: orders/models.py:22
+msgid "city"
+msgstr "ciudad"
+
+#: orders/templates/order/create.html:4 orders/templates/order/create.html:7
+msgid "Checkout"
+msgstr "echa un vistazo"
+
+#: orders/templates/order/create.html:10
+msgid "Your order"
+msgstr "su pedido"
+
+#: orders/templates/order/create.html:20
+#, python-format
+msgid ""
+"\n"
+"            \"%(code)s\" (%(discount)s%% off)\n"
+"            "
+msgstr ""
+"\n"
+"%(code)s(%(discount)s%%apagado)"
+
+#: orders/templates/order/create.html:27
+msgid "Total"
+msgstr "total"
+
+#: orders/templates/order/create.html:33
+msgid "Place order"
+msgstr "realizar pedido"
+
+#: orders/templates/order/created.html:4 orders/templates/order/created.html:8
+msgid "Thank you"
+msgstr "Gracias"
+
+#: orders/templates/order/created.html:9
+#, python-format
+msgid ""
+"\n"
+"<p>Your order has been completed successfully. Your order number is <strong>%(order.id)s</strong>.</p>\n"
+msgstr ""
+"\n"
+"<p>Su pedido se ha completado con éxito. tu numero de orden es<strong>%(order.id)s</strong>.</p>\n"
+
+#: orders/urls.py:8
+msgid "create/"
+msgstr "crear"

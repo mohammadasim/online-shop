@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+{% load i18n %}
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock title %}</title>
+    <title>{% block title %}{% trans 'Online Shop' %}{% endblock title %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
@@ -11,9 +12,27 @@
     <link rel="stylesheet" type="text" href="{% static '/css/base.css' %}">
 </head>
 <body>
+<div id="header">
+    {% get_current_language as LANGUAGE_CODE %}
+    {% get_available_languages as LANGUAGES %}
+    {% get_language_info_list for LANGUAGES as languages %}
+    <div class="languages">
+        <p>{% trans 'Language' %}</p>
+        <ul class="languages">
+            {% for language in languages %}
+            <li>
+            <a href="/{{ language.code }}"
+               {% if language.code == LANGUAGE_CODE %} class="selected"{% endif %}>
+                {{ language.name_local }}
+            </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
     <nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="#">My Shop</a>
+                <a class="navbar-brand" href="#">{% trans 'The Online Shop' %}</a>
                 <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
                         class="navbar-toggler" data-target="#navbarSupportedContent"
                         data-toggle="collapse" type="button">
@@ -22,33 +41,33 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a href="{% url 'shop:product_list' %}" class="nav-link">Products</a>
+                            <a href="{% url 'shop:product_list' %}" class="nav-link">{% trans 'Products' %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link"  href="#">Contact Us</a>
+                            <a class="nav-link"  href="#">{% trans 'Contact Us' %}</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            About US
+                            {% trans 'About Us' %}
                                 </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">About Us</a>
-                                <a class="dropdown-item" href="#">Our Mission</a>
-                                <a class="dropdown-item" href="#">What we do</a>
+                                <a class="dropdown-item" href="#">{% trans 'About Us' %}</a>
+                                <a class="dropdown-item" href="#">{% trans 'Our Mission' %}</a>
+                                <a class="dropdown-item" href="#">{% trans 'What we do' %}</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            User
+                            {% trans 'User' %}
                                 </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 {% if user.is_authenticated %}
-                                <a class="dropdown-item" href="#">Log Out</a>
-                                <a class="dropdown-item" href="#">View Profile</a>
+                                <a class="dropdown-item" href="#">{% trans 'Log Out' %}</a>
+                                <a class="dropdown-item" href="#">{% trans 'View Profile' %}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Update Profile</a>
+                                <a class="dropdown-item" href="#">{% trans 'Update Profile' %}</a>
                                 {% else %}
-                                <a class="dropdown-item" href="#">Log In</a>
+                                <a class="dropdown-item" href="#">{% trans 'Log In' %}</a>
                                 {% endif %}
                             </div>
                         </li>

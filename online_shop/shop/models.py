@@ -2,19 +2,24 @@ from django.db import models
 from django.urls import reverse
 from easy_thumbnails.fields import ThumbnailerImageField
 from django_prometheus.models import ExportModelOperationsMixin
+from parler.models import TranslatableModel, TranslatedFields
 
 
-class Category(ExportModelOperationsMixin('category'), models.Model):
+class Category(ExportModelOperationsMixin('category'), TranslatableModel):
     """
     Catalogue for the shop
     """
-    name = models.CharField(max_length=200,
-                            db_index=True, )
-    slug = models.SlugField(max_length=200,
-                            unique=True)
+    translations = TranslatedFields(
+        name=models.CharField(max_length=200,
+                              db_index=True, ),
+        slug=models.SlugField(max_length=200,
+                              db_index=True,
+                              unique=True)
+    )
 
     class Meta:
-        ordering = ('name',)
+        # Commented for model translations.
+        # ordering = ('name',)
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
@@ -26,19 +31,22 @@ class Category(ExportModelOperationsMixin('category'), models.Model):
                        args=[self.slug])
 
 
-class Product(ExportModelOperationsMixin('product'), models.Model):
+class Product(ExportModelOperationsMixin('product'), TranslatableModel):
     """
     Product in the shop
     """
+    translations = TranslatedFields(
+        name=models.CharField(max_length=200, db_index=True),
+        slug=models.SlugField(max_length=200, db_index=True),
+        description=models.TextField(blank=True)
+    )
     category = models.ForeignKey(Category,
                                  on_delete=models.CASCADE,
                                  related_name='products')
-    name = models.CharField(max_length=200, db_index=True)
-    slug = models.SlugField(max_length=200, db_index=True)
+
     image = ThumbnailerImageField(upload_to='products/%Y/%m/%d',
                                   blank=True,
                                   resize_source=dict(size=(100, 100), sharpen=True))
-    description = models.TextField(blank=True)
     # Always use DecimalField to store monetary amounts
     # FloatField uses python's float type internally, whereas
     # DecimalField uses python's Decimal type. By using
@@ -48,12 +56,14 @@ class Product(ExportModelOperationsMixin('product'), models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering = ('name',)
-        # we plan to query products by both id and slug
-        # both fields are indexed together to improve
-        # performance for queries that utilize the two fields.
-        index_together = (('id', 'slug'),)
+    # Commented for model translations.
+    # class Meta:
+
+    # ordering = ('name',)
+    # we plan to query products by both id and slug
+    # both fields are indexed together to improve
+    # performance for queries that utilize the two fields.
+    # index_together = (('id', 'slug'),)
 
     def __str__(self):
         return self.name

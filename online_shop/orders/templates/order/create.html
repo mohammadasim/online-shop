@@ -1,28 +1,37 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load crispy_forms_tags %}
-{% block title %}Checkout{% endblock title %}
+{% block title %}{% trans 'Checkout' %}{% endblock title %}
 
 {% block content %}
-<h1>Checkout</h1>
+<h1>{% trans 'Checkout' %}</h1>
 <div class="row">
-    <div class="col-md-8">
-        <form method="post" action="{% url 'orders:order_create' %}">
-            {{ form|crispy }}
-            {% csrf_token %}
-            <input type="submit" class="btn btn-secondary btn-sm" value="Place order">
-        </form>
-    </div>
     <div class="col-md-4">
-    <h3>Your order</h3>
+        <h3>{% trans 'Your order' %}</h3>
     <ul>
         {% for item in cart %}
             <li>
                 {{ item.quantity }} X {{ item.product.name }}
-                <span>£{{ item.total_price }}</span>
+                <span>£{{ item.total_price|floatformat:2 }}</span>
             </li>
         {% endfor %}
+        {% if cart.coupon %}
+        <li>
+            {% blocktrans with code=cart.coupon.code discount=cart.coupon.discount %}
+            "{{ code }}" ({{ discount }}% off)
+            {% endblocktrans %}
+            <spn class="neg"> - £{{ cart.get_discount|floatformat:2 }}</spn>
+        </li>
+        {% endif %}
     </ul>
-    <p>Total: £{{ cart.get_total_price }}</p>
+    <p>{% trans 'Total' %}: £{{ cart.get_total_price_after_discount|floatformat:2 }}</p>
+    </div>
+    <div class="col-md-8">
+        <form method="post" action="{% url 'orders:order_create' %}">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <input type="submit" class="btn btn-secondary btn-sm" value="{% trans 'Place order' %}">
+        </form>
 </div>
 </div>
 {% endblock content %}

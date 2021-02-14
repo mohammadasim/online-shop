@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from shop.models import Product
+
+from coupons.forms import CouponApplyForm
+from shop.recommender import Recommender
+
 from .cart import Cart
 from .forms import CartAddProductForm
 
@@ -52,6 +56,18 @@ def cart_detail(request):
                 'override': True
             }
         )
+    coupon_apply_form = CouponApplyForm()
+    r = Recommender()
+    # Getting the product from cart items in the cart.
+    # Each item in the cart has a product
+    cart_products = [item['product'] for item in cart]
+    # Passing the products to the recommendation engine
+    recommended_products = r.suggest_products_for(cart_products, max_results=4)
+
     return render(request,
                   'cart/detail.html',
-                  {'cart': cart})
+                  {
+                      'cart': cart,
+                      'coupon_apply_form': coupon_apply_form,
+                      'recommended_products': recommended_products
+                  })
